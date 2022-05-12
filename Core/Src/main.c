@@ -114,6 +114,7 @@ int main(void)
   	//uint64_t val_00C = 0x01020304;
   	//uint64_t val_3FC = 0x0000FFFF; //1024-4=1020 == 0x400-0x004=0x3FC
 
+  	/*
   	HAL_UART_Transmit(&huart1, (uint8_t*)"\n\n\r!!!Erase page 64!!!\n\r", sizeof("\n\n\r!!!Erase page 64!!!\n\r"), 100);
   	Flash_Erase_One_Page(ADDR_FLASH_PAGE); // очищення 64 сторінки
 
@@ -140,8 +141,8 @@ int main(void)
   	uint16_t b = Flash_Read_uint16(ADDR_FLASH_PAGE + 1 * SIZE_uint16);
   	uint16_t c = Flash_Read_uint16(ADDR_FLASH_PAGE + 2 * SIZE_uint16);
   	uint16_t d = Flash_Read_uint16(ADDR_FLASH_PAGE + 3 * SIZE_uint16);
+  	 */
 
-  		/*
   		HAL_UART_Transmit(&huart1, (uint8_t*)"\n\n\r!!!Erase page 64!!!\n\r", sizeof("\n\n\r!!!Erase page 64!!!\n\r"), 100);
   	  	Flash_Erase_One_Page(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 1); // очищення 62 сторінки
 
@@ -168,7 +169,7 @@ int main(void)
   	  	uint16_t b = Flash_Read_uint32(ADDR_FLASH_PAGE + 1 * SIZE_uint32);
   	  	uint16_t c = Flash_Read_uint32(ADDR_FLASH_PAGE + 3 * SIZE_uint32);
   	  	uint16_t d = Flash_Read_uint32(ADDR_FLASH_PAGE + 255 * SIZE_uint32);
-  	  	*/
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
