@@ -144,24 +144,24 @@ int main(void)
   	 */
 
   		HAL_UART_Transmit(&huart1, (uint8_t*)"\n\n\r!!!Erase page 64!!!\n\r", sizeof("\n\n\r!!!Erase page 64!!!\n\r"), 100);
-  	  	Flash_Erase_One_Page(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 1); // очищення 62 сторінки
+  	  	Flash_Erase_One_Page(ADDR_FLASH_PAGE); // очищення 62 сторінки
 
   		HAL_UART_Transmit(&huart1, (uint8_t*)"\n!!!Write!!!\n\r", sizeof("\n!!!Write!!!\n\r"), 100);
   	  	// запис значень на початку і в кінці 127 сторінки
-  	  	Flash_Write_uint16(ADDR_FLASH_PAGE + 0 * SIZE_uint32, val_000);
-  	  	Flash_Write_uint16(ADDR_FLASH_PAGE + 1 * SIZE_uint32, val_004);
-  	  	Flash_Write_uint16(ADDR_FLASH_PAGE + 3 * SIZE_uint32, val_00C);
-  	  	Flash_Write_uint16(ADDR_FLASH_PAGE + 255 * SIZE_uint32, val_3FC);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 0 * SIZE_uint32, val_000);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 1 * SIZE_uint32, val_004);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 3 * SIZE_uint32, val_00C);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 255 * SIZE_uint32, val_3FC);
 
   	  	HAL_UART_Transmit(&huart1, (uint8_t*)"\n!!!Erase page 63!!!\n\r", sizeof("\n!!!Erase page 63!!!\n\r"), 100);
   	  	Flash_Erase_One_Page(ADDR_FLASH_PAGE - SIZE_ONE_PAGE); // очищення 63 сторінки
 
   	  	HAL_UART_Transmit(&huart1, (uint8_t*)"\n!!!Write!!!\n\r", sizeof("\n!!!Write!!!\n\r"), 100);
   	  	// запис значень на початку і в кінці 126 сторінки
-  	  	Flash_Write_uint16(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x000, val_000);
-  	  	Flash_Write_uint16(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x004, val_004);
-  	  	Flash_Write_uint16(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x00C, val_00C);
-  	  	Flash_Write_uint16(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x3FC, val_3FC);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x000, val_000);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x004, val_004);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x00C, val_00C);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x3FC, val_3FC);
 
   	  	HAL_UART_Transmit(&huart1, (uint8_t*)"\n!!!Read!!!\n\r", sizeof("\n!!!Read!!!\n\r"), 100);
   	  	// читання значень з 64 сторінки Flash-пам'яті
