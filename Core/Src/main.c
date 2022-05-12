@@ -24,6 +24,7 @@
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include <inttypes.h>
 //#include "addr_pages.h"
 /* USER CODE END Includes */
 
@@ -95,19 +96,19 @@ int main(void)
   /* Initialize interrupts */
   MX_NVIC_Init();
   /* USER CODE BEGIN 2 */
-  	uint16_t SIZE_ONE_PAGE = 0x400; // розмір сторінки 1 Кб, або 1024 байта
-  	uint16_t ADDR_FLASH_PAGE = 0x08000000 + 24 * SIZE_ONE_PAGE; // адреса 64 сторінки 0x0800FC00
+  	uint64_t SIZE_ONE_PAGE = 0x400; // розмір сторінки 1 Кб, або 1024 байта
+  	uint64_t ADDR_FLASH_PAGE = 0x08000000 + 24 * SIZE_ONE_PAGE; // адреса 64 сторінки 0x0800FC00
 
   	//uint64_t SIZE_ONE_PAGE = 0x400; // розмір сторінки 1 Кб, або 1024 байта
   	//uint64_t ADDR_FLASH_PAGE = 0x08000000 + 16 * SIZE_ONE_PAGE; // адреса 64 сторінки 0x0800FC00
 
-  	size_t SIZE_uint16 = sizeof(uint16_t); // 32 біта це 4 байти
+  	size_t SIZE_uint64 = sizeof(uint64_t); // 32 біта це 4 байти
   	// в одну сторінку розміром 1Кб можна записати 1024/4=256 змінних розміром 4 байти
 
-  	uint16_t val_000 = 0x4567;
-  	uint16_t val_004 = 0xCDEF;
-  	uint16_t val_00C = 0x0304;
-  	uint16_t val_3FC = 0xFFFF; //1024-4=1020 == 0x400-0x004=0x3FC
+  	uint64_t val_000 = 0x4567274567276632;
+  	uint64_t val_004 = 0xCDECDCDDCDECDCDD;
+  	uint64_t val_00C = 0x0304030003040300;
+  	uint64_t val_3FC = 0xF0F0F0F0F0F0F0F0; //1024-4=1020 == 0x400-0x004=0x3FC
 
   	//uint64_t val_000 = 0x01234567;
   	//uint64_t val_004 = 0x89ABCDEF;
@@ -148,10 +149,10 @@ int main(void)
 
   		HAL_UART_Transmit(&huart1, (uint8_t*)"\n!!!Write!!!\n\r", sizeof("\n!!!Write!!!\n\r"), 100);
   	  	// запис значень на початку і в кінці 127 сторінки
-  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 0 * SIZE_uint32, val_000);
-  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 1 * SIZE_uint32, val_004);
-  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 3 * SIZE_uint32, val_00C);
-  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 255 * SIZE_uint32, val_3FC);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 0 * SIZE_uint64, val_000);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 1 * SIZE_uint64, val_004);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 2 * SIZE_uint64, val_00C);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE + 3 * SIZE_uint64, val_3FC);
 
   	  	HAL_UART_Transmit(&huart1, (uint8_t*)"\n!!!Erase page 63!!!\n\r", sizeof("\n!!!Erase page 63!!!\n\r"), 100);
   	  	Flash_Erase_One_Page(ADDR_FLASH_PAGE - SIZE_ONE_PAGE); // очищення 63 сторінки
@@ -159,16 +160,16 @@ int main(void)
   	  	HAL_UART_Transmit(&huart1, (uint8_t*)"\n!!!Write!!!\n\r", sizeof("\n!!!Write!!!\n\r"), 100);
   	  	// запис значень на початку і в кінці 126 сторінки
   	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x000, val_000);
-  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x004, val_004);
-  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x00C, val_00C);
-  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x3FC, val_3FC);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x008, val_004);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x010, val_00C);
+  	  	Flash_Write_uint64(ADDR_FLASH_PAGE - SIZE_ONE_PAGE + 0x018, val_3FC);
 
   	  	HAL_UART_Transmit(&huart1, (uint8_t*)"\n!!!Read!!!\n\r", sizeof("\n!!!Read!!!\n\r"), 100);
   	  	// читання значень з 64 сторінки Flash-пам'яті
-  	  	uint16_t a = Flash_Read_uint32(ADDR_FLASH_PAGE + 0 * SIZE_uint32);
-  	  	uint16_t b = Flash_Read_uint32(ADDR_FLASH_PAGE + 1 * SIZE_uint32);
-  	  	uint16_t c = Flash_Read_uint32(ADDR_FLASH_PAGE + 3 * SIZE_uint32);
-  	  	uint16_t d = Flash_Read_uint32(ADDR_FLASH_PAGE + 255 * SIZE_uint32);
+  	  	uint64_t a = Flash_Read_uint64(ADDR_FLASH_PAGE + 0 * SIZE_uint64);
+  	  	uint64_t b = Flash_Read_uint64(ADDR_FLASH_PAGE + 1 * SIZE_uint64);
+  	  	uint64_t c = Flash_Read_uint64(ADDR_FLASH_PAGE + 2 * SIZE_uint64);
+  	  	uint64_t d = Flash_Read_uint64(ADDR_FLASH_PAGE + 3 * SIZE_uint64);
 
   /* USER CODE END 2 */
 
@@ -339,14 +340,14 @@ void Flash_Write_uint32(uint32_t MYADDR, uint32_t val)
 	HAL_FLASH_Lock(); // заблокування Flash-пам'яті
 }
 */
-void Flash_Write_uint16(uint32_t MYADDR, uint16_t val)
+void Flash_Write_uint64(uint32_t MYADDR, uint64_t val)
 {
 	char str[64] = { 0, };
 
 	///////////// ЗАПИС у Flash-пам'ять ///////////////
 	HAL_FLASH_Unlock(); // розблокування Flash-пам'яті
 
-	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, MYADDR, val) != HAL_OK)
+	if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, MYADDR, val) != HAL_OK)
 	{
 		uint16_t er = HAL_FLASH_GetError();
 		snprintf(str, 64, "Error Flash_Write(): %u\n\r", er);
@@ -355,20 +356,20 @@ void Flash_Write_uint16(uint32_t MYADDR, uint16_t val)
 		{
 		}
 	}
-	uint32_t var32 = val;
-	snprintf(str, 64, "Write 16 bits (Hex: 0x%08lX) to address 0x%08lX OK\n\r", var32, MYADDR);
+	//uint32_t var32 = val;
+	snprintf(str, 64, "Write 64 bits (Hex: 0x%016llX) to address 0x%08lX\n\r", val, MYADDR);
 	HAL_UART_Transmit(&huart1, (uint8_t*) str, strlen(str), 100);
 
 	HAL_FLASH_Lock(); // заблокування Flash-пам'яті
 }
 
-uint32_t Flash_Read_uint16(uint32_t MYADDR)
+uint32_t Flash_Read_uint64(uint32_t MYADDR)
 {
 	char str[64] = { 0, };
 
 	/////////////// ЧИТАЄМО Flash-пам'ять ///////////////////
-	uint16_t dig32 = *(uint16_t*) MYADDR; // читання числа за його адресою
-	snprintf(str, 64, "Read 16 bits (Dec: %u \tHex: 0x%08X)", dig32, dig32);
+	uint64_t dig32 = *(uint64_t*) MYADDR; // читання числа за його адресою
+	snprintf(str, 64, "Read 64 bits (Dec: %lu \tHex: 0x%016llX\n)", dig32, dig32);
 	HAL_UART_Transmit(&huart1, (uint8_t*) str, strlen(str), 100);
 	snprintf(str, 64, " from address 0x%08lX \n\r", MYADDR);
 	HAL_UART_Transmit(&huart1, (uint8_t*) str, strlen(str), 100);

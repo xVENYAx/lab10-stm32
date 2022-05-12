@@ -54,8 +54,8 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 void Flash_Erase_One_Page(uint32_t);
-void Flash_Write_uint16(uint32_t, uint16_t);
-uint32_t Flash_Read_uint16(uint32_t);
+void Flash_Write_uint64(uint32_t, uint64_t);
+uint32_t Flash_Read_uint64(uint32_t);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
